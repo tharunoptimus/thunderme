@@ -82,6 +82,11 @@ io.on("connection", (socket) => {
         var chat = newMessage.chat;
 
         if(!chat.users) return console.log("Chat.users is not defined");
+        if((newMessage.content).substring(0, 4) == "<div") {
+            var lastObject = (newMessage.content).indexOf('<i class="far fa-external-link-square-alt') - 1;
+            var firstObject = (newMessage.content).indexOf('">') + 2;
+            newMessage.content = (newMessage.content).substring(firstObject, lastObject);
+        }
 
         chat.users.forEach(user => {
             if(user._id == newMessage.sender._id) return;

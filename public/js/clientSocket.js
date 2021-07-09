@@ -1,6 +1,6 @@
 var connect = false;
 
-var socket = io("http://localhost:3003");
+var socket = io(window.location.origin);
 socket.emit("setup", userLoggedIn);
 
 
