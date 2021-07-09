@@ -36,6 +36,21 @@ $(document).ready(function () {
 
 });
 
+$(document).on("click", (e) => {
+    var target = $(e.target)
+    if(target.hasClass("leaveChat")){
+        if(confirm("Are you sure you want to leave this chat room?")) {
+            $.ajax({
+                url: `/api/chats/${chatId}/leaveChat`,
+                type: "PUT", 
+                success: () => location.reload(),
+                error: () => confirm("Could not update. Please try again")
+            })
+        }
+        return false
+    }
+})
+
 const activatePopper = () => {
     $(function(){
         // Enables popover

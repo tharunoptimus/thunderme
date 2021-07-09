@@ -84,6 +84,13 @@ router.put("/:chatId/messages/markAsRead", async (req, res, next) => {
     })
 })
 
-
+router.put("/:id/leaveChat", async (req, res, next) => { 
+    await Chat.findByIdAndUpdate(req.params.id, {$pull: {users: req.session.user._id}})
+    .then(() => res.sendStatus(204))
+    .catch(error => {
+        console.log(error)
+        res.status(400)
+    })
+})
 
 module.exports = router;

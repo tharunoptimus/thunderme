@@ -860,7 +860,7 @@ function outputChatList (chatList, container) {
     });
 
     if(chatList.length == 0) {
-        container.append("<span clas='noResults'>Nothing to show</span>");
+        container.append("<span class='noResults'>Nothing to show</span>");
     }
 }
 

@@ -10,6 +10,8 @@ block content
             .chatTitleBarContainer
                 +createChatImage(chat, userLoggedIn)
                 span#chatName(data-toggle="modal", data-target="#chatNameModal")
+                button.leaveChat(style="outline: none;")
+                    i(class="fal fa-user-minus", style="pointer-events: none;")
 
             .mainContentContainer
                 .loadingSpinnerContainer

@@ -976,6 +976,21 @@ ul {
 	place-items: center;
 }
 
+.leaveChat {
+	outline: none;
+    margin: 0.5rem 0.5rem;
+    cursor: pointer;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+    background-color: #ff79791a;
+    border-radius: 1rem;
+}
+
+.noResults {
+	display: grid;
+	place-items: center;
+}
+
 
 /* Media queries */
 /* iPad Portrait */
