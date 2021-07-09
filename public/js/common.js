@@ -439,6 +439,11 @@ function replaceURLs(message) {
 const createPostHtml = (postData, largeFont = false) => {
 	if (postData == null) return alert("Post Object is Null!");
 
+	if (postData.content == null) {
+		postData.content =
+			"<div class='notAvailable'>This content is not available</div>";
+	} 
+
 	var isRetweet = postData.retweetData !== undefined;
 	var retweetedBy = isRetweet ? postData.postedBy.username : null;
 	postData = isRetweet ? postData.retweetData : postData;

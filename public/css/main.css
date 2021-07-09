@@ -976,6 +976,15 @@ ul {
 	place-items: center;
 }
 
+.notAvailable {
+	border: 0.05px solid #b8abab;
+	display: inline-block;
+	padding-left: 0.3125rem;
+	padding-right: 0.3125rem;
+	border-radius: 0.3125rem;
+	background-color: #c5c9c526;
+}
+
 .leaveChat {
 	outline: none;
     margin: 0.5rem 0.5rem;

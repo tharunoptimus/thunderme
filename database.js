@@ -11,7 +11,7 @@ class Database {
     }
 
     connect() {
-        mongoose.connect("mongodb+srv://username:password@commit.fddsp.mongodb.net/CommitDB?retryWrites=true&w=majority")
+        mongoose.connect("mongodb+srv://meowman:meowman@connect.ryqlc.mongodb.net/connect?retryWrites=true&w=majority")
         .then(() => {
             console.log("Database Connection Successful!");
         })

@@ -1,11 +1,11 @@
 {
-  "name": "commit",
+  "name": "connectme",
   "version": "1.0.0",
-  "description": "Alumni Connection Site",
+  "description": "Connect Me",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "Tharunraj Optimus",
   "license": "ISC",
