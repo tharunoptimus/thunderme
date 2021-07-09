@@ -1,0 +1,17 @@
+extends layouts/main-layout.pug
+block content
+
+    .searchBarContainer
+        i.fal.fa-search
+        input#searchBox(type="text", name="searchBox", data-search = selectedTab, title="Powered by Jamun", placeholder="Search for Users or Posts")
+
+    .tabsContainer
+        +createTab("Posts", `/search/posts`, selectedTab != "users")
+        +createTab("Users", `/search/users`, selectedTab == "users")
+
+    .resultsContainer
+
+    +createPostModals(userLoggedIn)
+
+block scripts 
+    script(src="/js/search.js")
