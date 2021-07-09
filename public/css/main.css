@@ -273,6 +273,17 @@ nav a.blue {
 	background-color: var(--greenBackground);
 }
 
+.postButtonContainer .shareButton {
+	padding: 2px;
+}
+
+.postButtonContainer .shareButton:hover {
+	color: #FDA7DF;
+	background-color: #ff9ff333;
+	padding-left: 5px;
+	padding-right: 8px;
+}
+
 .postActionContainer {
 	padding-left: var(--spacing);
 	font-size: 0.8125rem;

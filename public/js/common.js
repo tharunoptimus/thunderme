@@ -329,6 +329,26 @@ $(document).on("click", ".retweetButton", (event) => {
 	});
 });
 
+$(document).on("click", ".shareButton", async (event) => {
+	var element = $(event.target);
+	var postId = getPostIdFromElement(element);
+
+	if(postId !== undefined) {
+		var shareData = {
+			title: "Connect Me",
+			text: "Tweet on ConnectMe",
+			url: window.location.origin + "/posts/" + postId,
+		};
+		try {
+			await navigator.share(shareData);
+		} catch (err) {
+			console.log(err);
+			alert("Unable to share!")
+		}
+
+	}
+});
+
 $(document).on("click", ".post", (event) => {
 	var element = $(event.target);
 	var postId = getPostIdFromElement(element);
@@ -530,6 +550,12 @@ const createPostHtml = (postData, largeFont = false) => {
                                 <button style='outline: none;' class='likeButton ${likeButtonActiveClass}'>
                                     <i class="fal fa-heart"></i>
 									<span>${postData.likes.length || ""}</span>
+                                </button>
+                            </div>
+
+							<div class='postButtonContainer'>
+                                <button aria-label='like' style='outline: none;' class='shareButton'>
+								<i class="fal fa-share-alt"> </i>
                                 </button>
                             </div>
                         </div>
