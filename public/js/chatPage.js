@@ -32,7 +32,12 @@ $(document).ready(function () {
 
 });
 
-
+const activatePopper = () => {
+    $(function(){
+        // Enables popover
+        $("[data-toggle=popover]").popover();
+    });
+}
 
 $("#chatNameButton").click(function (e) { 
     var name = $("#chatNameTextbox").val().trim();
@@ -139,6 +144,10 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
 
     var sender = message.sender;
     var senderName = sender.firstName + sender.lastName;
+    var senderName = sender.firstName + " " + sender.lastName;
+
+    var timestamp = timeDifference(new Date(), new Date(message.createdAt));
+    var toShowInfo = "";
 
     var currentSenderId = sender._id;
     var nextSenderId = nextMessage != null ? nextMessage.sender._id : "";
@@ -164,7 +173,17 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
 
     if(isLast) {
         liClassName+= " last";
-        profileImage = `<img src='${sender.profilePic}'>`
+        profileImage = `<a style="outline: none;" 
+                            data-placement="right" 
+                            class="vocabularyAnchor" 
+                            tabindex="0" 
+                            role="button" 
+                            data-toggle="popover" 
+                            data-trigger="focus" 
+                            title="${senderName}:" 
+                            data-content="Received ${timestamp}"
+                        ><img src='${sender.profilePic}'></a>`;
+        activatePopper();
     }
     var imageContainer = "";
     if(!isMine) {
