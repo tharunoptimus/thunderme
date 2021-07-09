@@ -19,6 +19,34 @@ router.get("/", (req, res, next) => {
     res.status(200).render("profilePage", payload);
 })
 
+router.get("/editprofile", async (req, res, next) => {
+
+    var payload = {
+        pageTitle: "Update Profile",
+        userLoggedIn: req.session.user,
+        userLoggedInJs: JSON.stringify(req.session.user),
+        profileUser: req.session.user
+    }
+
+    var user = await User.findOne({ username: req.session.user.username })
+    .catch(() => {
+        return res.redirect("/");
+    })
+
+    var payload = {
+        pageTitle: "Update Profile",
+        userLoggedIn: req.session.user,
+        userLoggedInJs: JSON.stringify(req.session.user),
+        profileUser: req.session.user,
+        personalEmail: user.personalEmail !== undefined ? user.personalEmail : "",
+        phone: user.phone !== undefined ? user.phone : "",
+        linkIn: user.linkedIn !== undefined ? user.linkedIn : "",
+        personalURL: user.personalURL !== undefined ? user.personalURl : ""
+    }
+
+    res.status(200).render("updateProfile", payload);
+})
+
 router.get("/:username", async (req, res, next) => {
 
     var payload = await getPayload(req.params.username, req.session.user);

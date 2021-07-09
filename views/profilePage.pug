@@ -35,9 +35,21 @@ block content
                         +createFollowButton(profileUser, true)
                     - else
                         +createFollowButton(profileUser, false)
+                else
+                    a(href="/logout", aria-label="Logout", class='profileLogout')
+                        span Logout  
+                            i.fal.fa-sign-out-alt
+                    a(href="/profile/editprofile", aria-label="Edit Profile", class='profileLogout')
+                            span Edit  
+                                i.fal.fa-user-edit
             .userDetailsContainer
                 span.displayName #{profileUser.firstName} #{profileUser.lastName}
                 span.username @#{profileUser.username}
+                .singleEntity(style="display: flex")
+                    span.username @#{profileUser.username}
+                    #userStatus(style="padding-left: 0.5rem;")
+                        span#defaultEmail #{profileUser.email}
+                        span#officialStatus #{profileUser.official}
                 span.description #{profileUser.description}
 
                 .followersContainer
@@ -47,6 +59,33 @@ block content
                     a(href=`/profile/${profileUser.username}/following`)
                         span#follwersValue.value #{followersCount}
                         span Followers
+                
+                - if (profileUser.personalEmail !== undefined)
+                    span 
+                        a(href=`mailto:${profileUser.personalEmail}`, class='profileUserGeneralDetailsAnchor')
+                            i(style="color: #e67e22",class="fal fa-envelope-open-text")
+                            span #{profileUser.personalEmail}
+                - if (profileUser.phone !== undefined)
+                    span 
+                        a(href=`tel:${profileUser.phone}`, class='profileUserGeneralDetailsAnchor')
+                            i(style="color: #44bd32", class="fal fa-mobile-android")
+                            span #{profileUser.phone}
+                - if (profileUser.linkedIn !== undefined)
+                    span 
+                        a(href=`https://https://www.linkedin.com/in/${profileUser.linkedIn}`, class='profileUserGeneralDetailsAnchor')
+                            i(style="color: #2867B2", class="fab fa-linkedin-in")
+                            span #{profileUser.linkedIn}
+                - if (profileUser.personalURL !== undefined)
+                    span 
+                        a(href=`${profileUser.personalURL}`, class='profileUserGeneralDetailsAnchor')
+                            i(class="fal fa-link")
+                            span #{profileUser.personalURL}
+                - if (profileUser.aboutField !== undefined)
+                    span(style="margin: 1rem;margin-left: 0;border: 1px solid var(--lightGrey);padding: 0.2rem;border-radius: 0.5rem;")
+                            span#aboutField(style="font-weight: 400;") #{profileUser.aboutField}
+                            if profileUser._id == userLoggedIn._id
+                                button#editAboutFieldButton(data-toggle="modal", data-target="#editAboutField", style="outline: none;")
+                                    i(class="fal fa-pencil" style="margin: 0.5rem;padding: 0.3rem;border: 3px solid var(--lightGrey);border-radius: 50%;")
         .tabsContainer
             +createTab("Posts", `/profile/${profileUser.username}`, selectedTab != "replies")
             +createTab("Replies", `/profile/${profileUser.username}/replies`, selectedTab == "replies")
@@ -57,6 +96,7 @@ block content
         +createPostModals(userLoggedIn)
         +createImageUploadModal()
         +createCoverPhotoUploadModal()
+        +editAboutField()
 
 block scripts 
     script(src="/js/profile.js")

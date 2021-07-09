@@ -155,3 +155,17 @@ mixin createChatNameModal(chat)
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
                     button#chatNameButton.btn.btn-primary(type='button') Save
+
+mixin editAboutField()
+    #editAboutField.modal.fade(tabindex='-1' role='dialog' aria-labelledby='editAboutFieldLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#editAboutFieldLabel.modal-title Edit About
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') 
+                .modal-body
+                    input#aboutFieldInput(style="width: 100%; padding: 0.2rem;", type="text", placeholder="Hi There! Connect Me!")
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#changeAboutButton.btn.btn-primary(type='button', disabled="") Change

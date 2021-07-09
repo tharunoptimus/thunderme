@@ -1,0 +1,32 @@
+extends layouts/main-layout.pug
+block content
+    .profilePageContainer
+        script.
+            var profileUserId = '!{profileUser._id}';
+
+        .fieldsContainer
+            .g-input.fill
+                input#firstName(type="text", name="firstName", value=userLoggedIn.firstName, required="", placeholder=" ")
+                label(for="firstName") First Name
+            .g-input.fill
+                input#lastName(type="text", name="lastName", value=userLoggedIn.lastName, required="", placeholder=" ")
+                label(for="lastName") Last Name
+            .g-input.fill
+                input#personalEmail(type="text", name="personalEmail", value=userLoggedIn.personalEmail, placeholder=" ")
+                label(for="personalEmail") Personal Email
+            .g-input.fill
+                input#phone(type="text", name="phone", value=userLoggedIn.phone, placeholder=" ")
+                label(for="phone") Phone Number
+            .g-input.fill
+                input#linkedIn(type="text", name="linkedIn", value=userLoggedIn.linkedIn, placeholder=" ")
+                label(for="linkedIn") LinkedIn ID
+            .g-input.fill
+                input#personalURL(type="text", name="personalURL", value=userLoggedIn.personalURL, placeholder=" ")
+                label(for="personalURL") Personal Website
+
+        .submitButton
+            button#submitDetails(class="btn btn-primary") Submit
+
+
+block scripts 
+    script(src="/js/updateProfile.js")

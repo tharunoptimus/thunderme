@@ -890,7 +890,91 @@ ul {
 	background-color: #FFFFFF;
 }
 
+.profileUserGeneralDetailsAnchor {
+	display: flex;
+	flex-direction: row;
+}
 
+.profileUserGeneralDetailsAnchor > i {
+	margin: 0.3rem;
+    margin-left: 0;
+    width: 1.2rem;
+}
+
+.profileUserGeneralDetailsAnchor:hover {
+	text-decoration: underline;
+}
+
+.profileLogout {
+	padding: 0.4rem;
+	border: 1px solid var(--blue);
+	color: var(--blue);
+	border-radius: 1rem;
+	margin: 0.2rem;
+}
+
+
+.fieldsContainer {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.g-input {
+	position: relative;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	display: inline-block;
+}
+.g-input label {
+	background: white;
+	padding: 3px;
+	font-size: 12px;
+	transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+	transform-origin: bottom left;
+	color: #ddd;
+	font-family: arial;
+	position: absolute;
+	top: 7px;
+	left: 7px;
+	z-index: 1;
+	cursor: text;
+}
+
+.g-input input,
+.g-input textarea {
+	border: 1px solid #ddd;
+	display: block;
+	padding: 10px;
+	border-radius: 3px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.g-input.fill {
+	display: block;
+	margin: 1rem;
+}
+
+.g-input input:focus,
+.g-input textarea:focus {
+	outline: 0;
+	border-color: #1873e8;
+}
+
+.g-input input:focus + label,
+.g-input input:not(:placeholder-shown) + label,
+.g-input textarea:focus + label,
+.g-input textarea:not(:placeholder-shown) + label {
+	transform: translateX(-3px) translateY(-15px);
+	font-size: 0.8rem;
+	color: #1a73e8;
+}
+
+.profilePageContainer .submitButton {
+	display: grid;
+	place-items: center;
+}
 
 
 /* Media queries */
@@ -908,5 +992,11 @@ ul {
 	#notificationList {
 		right: 15vw;
 		width: 70vw;
+	}
+	.fieldsContainer {
+		grid-template-columns: 1fr;
+	}
+	.header .username {
+		display: none;
 	}
 }

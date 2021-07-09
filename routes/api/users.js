@@ -65,6 +65,24 @@ router.put("/:userId/follow", async (req, res, next) => {
     res.status(200).send(req.session.user);
 })
 
+router.put("/updateprofiledetails", async (req, res, next) => {
+    var user = await User.findByIdAndUpdate(req.session.user._id, req.body, { new: true })
+    .then(results => { 
+        req.session.user = user;
+        res.sendStatus(204)
+    })
+    .catch(error => { console.log(error); res.sendStatus(400);})
+})
+
+router.put("/updateaboutfield", async (req, res, next) => {
+    var user = await User.findByIdAndUpdate(req.session.user._id, req.body, { new: true })
+    .then(results => { 
+        req.session.user = user;
+        res.sendStatus(204)
+    })
+    .catch(error => { console.log(error); res.sendStatus(400);})
+})
+
 router.get("/:userId/following", async (req, res, next) => {
 
     await User.findById(req.params.userId)
