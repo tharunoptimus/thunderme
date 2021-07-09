@@ -2,6 +2,7 @@ $(document).ready(function () {
     $.get("/api/notifications", (data) => {
         outputNotificationList(data, $(".resultsContainer"));
     })
+    $(".fa-bell").css('color', 'var(--blue)');
 });
 
 $("#markNotificationsAsRead").click( () => markNotificationsAsOpened());

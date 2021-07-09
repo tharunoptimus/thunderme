@@ -4,6 +4,7 @@ const middleware = require("./middleware")
 const port = process.env.PORT || 3003;
 const path = require('path')
 const mongoose = require("./database")
+var favicon = require('serve-favicon')
 const session = require("express-session")
 
 const server = app.listen(port, () => console.log("Server Listening on " + port));
@@ -15,6 +16,7 @@ app.set("views", "views");
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "public")));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
 
 app.use(session({
@@ -27,6 +29,7 @@ app.use(session({
 const loginRoute = require("./routes/loginRoutes");
 const registerRoute = require("./routes/registerRoots");
 const logoutRoute = require("./routes/logoutRoutes");
+const homeRoute = require("./routes/homeRoutes");
 const postRoute = require("./routes/postRoutes");
 const profileRoute = require("./routes/profileRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
@@ -45,13 +48,13 @@ const notificationsApiRoute = require("./routes/api/notifications");
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
 app.use("/logout", logoutRoute);
+app.use("/home", middleware.requireLogin, homeRoute);
 app.use("/posts", middleware.requireLogin, postRoute);
 app.use("/profile", middleware.requireLogin, profileRoute);
 app.use("/uploads", uploadRoutes);
 app.use("/search", middleware.requireLogin, searchRoutes);
 app.use("/messages", middleware.requireLogin, messagesRoutes);
 app.use("/notifications", middleware.requireLogin, notificationsRoutes);
-
 
 app.use("/api/posts", postsApiRoute);
 app.use("/api/users", usersApiRoute);
@@ -95,3 +98,8 @@ io.on("connection", (socket) => {
     });
 
 })
+
+//The 404 Route (ALWAYS Keep this as the last route)
+app.get('*', function(req, res){
+    res.status(200).render("error");
+});

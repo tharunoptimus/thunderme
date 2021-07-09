@@ -7,5 +7,6 @@ $(document).ready(function () {
             outputChatList(data, $(".resultsContainer"));
         }
     })
+    $(".fa-envelope").css('color', 'var(--blue)');
 });
 

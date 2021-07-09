@@ -2,10 +2,22 @@
 var cropper;
 var timer;
 var selectedUsers = [];
+var isMobileView;
 
 $(document).ready(function () {
 	refreshMessagesBadge();
 	refreshNotificationsBadge();
+	if (screen.width < 992) { $(".hideOnSmallDisplay").hide(); }
+    else { $(".hideOnSmallDisplay").show(); }
+
+	if(screen.width < 420) {
+		$("#navigatorBarDesktop").remove();
+		isMobileView = true;
+	}
+	else {
+		$("#navigatorBarMobile").remove();
+		isMobileView = false;
+	}
 });
 
 $("#postTextarea, #replyTextarea").keyup(function (e) {
@@ -454,7 +466,7 @@ const createPostHtml = (postData, largeFont = false) => {
 		return console.log("User data was not populated");
 	}
 
-	var displayName = postedBy.firstName + " " + postedBy.lastName;
+	var displayName = isMobileView ? postedBy.firstName : postedBy.firstName + " " + postedBy.lastName;
 	var timestamp = timeDifference(new Date(), new Date(postData.createdAt));
 
 	var likeButtonActiveClass = postData.likes.includes(userLoggedIn._id)
@@ -503,8 +515,8 @@ const createPostHtml = (postData, largeFont = false) => {
 					<button class='deleteButton' style='outline: none;' data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal"><i class="fal fa-trash-alt"></i></button>`;
 		}
 		else {
-			buttons = `	<button class='pinButton' style='outline: none;' data-id="${postData._id}" data-toggle="modal" data-target="#confirmPinModal"><i class="fal fa-thumbtack"></i></button>
-					<button class='deleteButton' style='outline: none;' data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal"><i class="fal fa-trash-alt"></i></button>`;
+			buttons = `	<button class='pinButton' style='outline: none;' data-id="${postData._id}" data-toggle="modal" data-target="#confirmPinModal" aria-label="Pin Post"><i class="fal fa-thumbtack"></i></button>
+					<button class='deleteButton' style='outline: none;' data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal" aria-label="Delete Post"><i class="fal fa-trash-alt"></i></button>`;
 		}	
 	}
 
@@ -519,16 +531,18 @@ const createPostHtml = (postData, largeFont = false) => {
 				</div>
                 <div class='mainContentContainer'>
                     <div class='userImageContainer'>
-                        <img src = '${postedBy.profilePic}'>
+                        <img src = '${postedBy.profilePic}' alt='User Profile Photo'>
                     </div>
                     <div class='postContentContainer'>
 						<div class='pinnedPostText'>
 							${pinnedPostText}
 						</div>
                         <div class='header'>
-                            <a href='/profile/${
-								postedBy.username
-							}'>${displayName}</a>
+							<div class='postedByNameHolder'>
+								<a href='/profile/${
+									postedBy.username
+								}'>${displayName}</a>
+							</div>
                             <span class='username'>@${postedBy.username}</span>
                             <span class='date'>${timestamp}</span>
 							${buttons}
@@ -539,20 +553,20 @@ const createPostHtml = (postData, largeFont = false) => {
                         </div>
                         <div class='postFooter'>
                             <div class='postButtonContainer'>
-                                <button style='outline: none;' data-toggle='modal' data-target='#replyModal'>
+                                <button aria-label='comment'  style='outline: none;' data-toggle='modal' data-target='#replyModal'>
                                     <i class="fal fa-comment"></i>
                                 </button>
                             </div>
 
                             <div class='postButtonContainer green'>
-                                <button style='outline: none;' class='retweetButton ${retweetButtonActiveClass}'>
+                                <button aria-label='retweet'  style='outline: none;' class='retweetButton ${retweetButtonActiveClass}'>
                                     <i class="fal fa-retweet"></i>
 									<span>${postData.retweetUsers.length || ""}</span>
                                 </button>
                             </div>
 
                             <div class='postButtonContainer red'>
-                                <button style='outline: none;' class='likeButton ${likeButtonActiveClass}'>
+                                <button aria-label='like'  style='outline: none;' class='likeButton ${likeButtonActiveClass}'>
                                     <i class="fal fa-heart"></i>
 									<span>${postData.likes.length || ""}</span>
                                 </button>
@@ -580,17 +594,17 @@ function timeDifference(current, previous) {
 
 	if (elapsed < msPerMinute) {
 		if (elapsed / 1000 < 30) return "Just now";
-		return Math.round(elapsed / 1000) + " seconds ago";
+		return Math.round(elapsed / 1000) + "s";
 	} else if (elapsed < msPerHour) {
-		return Math.round(elapsed / msPerMinute) + " minutes ago";
+		return Math.round(elapsed / msPerMinute) + "m";
 	} else if (elapsed < msPerDay) {
-		return Math.round(elapsed / msPerHour) + " hours ago";
+		return Math.round(elapsed / msPerHour) + "h";
 	} else if (elapsed < msPerMonth) {
-		return Math.round(elapsed / msPerDay) + " days ago";
+		return Math.round(elapsed / msPerDay) + "d";
 	} else if (elapsed < msPerYear) {
-		return Math.round(elapsed / msPerMonth) + " months ago";
+		return Math.round(elapsed / msPerMonth) + "month";
 	} else {
-		return Math.round(elapsed / msPerYear) + " years ago";
+		return Math.round(elapsed / msPerYear) + "y";
 	}
 }
 
@@ -913,3 +927,19 @@ function getUserChatImageElement(user) {
 
     return `<img src='${user.profilePic}' alt='User\'s profile pic'>`;
 }
+
+$( window ).resize(function() {
+	var isNavigatorMobileHidden = $("#navigatorBarMobile").is(":hidden");
+
+	if(isMobileView) {
+		if(isNavigatorMobileHidden) {
+			$("#navigatorBarMobile").show();
+			$(".chatContainer").css("height","76vh");
+		}
+		else {
+			$("#navigatorBarMobile").hide();
+			$(".chatContainer").css("height","83vh");
+		}
+	}
+
+  });

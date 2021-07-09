@@ -5,7 +5,18 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(name="author", content="tharunoptimus")
+        meta(name="keywords", content="connect me, connect")
+        meta(name="description", content="Connect me to the world")
+        meta(name="theme-color", content="#317EFB")
+
+        link(rel="shortcut icon", href="/favicon.ico")
+        link(rel="manifest", href="/manifest.json")
+        link(rel="apple-touch-icon", href="manifestlogo.png")
+
         title #{pageTitle}
+        script(src="/js/pace.js")
+        link(rel="stylesheet" href="/css/pace.css")
         link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css')
         link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous')
         link(rel="stylesheet", href="/css/main.css", id="maincss")
@@ -14,25 +25,41 @@ html(lang="en")
             var userLoggedIn = !{userLoggedInJs};
         .wrapper
             .row
-                nav.col-2
-                    a(href="/").blue
-                        i.fab.fa-node-js
-                    a(href="/search")
+                nav.col-2#navigatorBarDesktop
+                    a(href="/", aria-label="Home")
+                        i.logo.fab.fa-node-js
+                    a(href="/search", aria-label="Search")
                         i.fal.fa-search
-                    a(href="/notifications")
+                    a(href="/notifications", aria-label="Notifications")
                         i.fal.fa-bell
                         span#notificationBadge
-                    a(href="/messages")
+                    a(href="/messages", aria-label="Messages")
                         i.fal.fa-envelope
                         span#messagesBadge
-                    a(href="/profile")
+                    a(href="/profile", aria-label="Profile")
                         i.fal.fa-user
                 .mainSectionContainer.col-10.col-md-8.col-lg-7
                     .titleContainer
                         h1 #{pageTitle}
                         block headerButton
                     block content
-                .d-none.d-md-block.col-2.col-lg-3
+
+                #navigatorBarMobile.navigatorBarMobile
+                    a(href="/", aria-label="Home")
+                        i.logo.fab.fa-node-js
+                    a(href="/search", aria-label="Search")
+                        i.fal.fa-search
+                    a(href="/notifications", aria-label="Notifications")
+                        i.fal.fa-bell
+                        span#notificationBadge
+                    a(href="/messages", aria-label="Inbox")
+                        i.fal.fa-envelope
+                        span#messagesBadge
+                    a(href="/profile", aria-label="Profile")
+                        i.fal.fa-user
+
+                .hideOnSmallDisplay.col-lg-4
+                .d-none.d-lg-block.hideOnSmallDisplay.col-lg-4
         #notificationList
 
         script(src='https://code.jquery.com/jquery-3.6.0.min.js' integrity='sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=' crossorigin='anonymous')

@@ -2,4 +2,5 @@ $(document).ready(function () {
     $.get("/api/posts/" + postId, (results) => {
         outputPostsWithReplies(results, $(".postsContainer"));
     })
+    $(".logo").css('color', 'var(--blue)');
 });

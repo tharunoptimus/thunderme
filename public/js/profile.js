@@ -9,11 +9,7 @@ $(document).ready(function () {
         official: $("#officialStatus").html() == "" ? undefined : true,
         email: $("#defaultEmail").html()
     }
-    console.log(userData)
-    $('span[id^="officialStatus"]').remove();
-    $('span[id^="defaultEmail"]').remove();
-    var html = currentStatus(userData);
-    $("#userStatus").html(html);
+    $(".fa-user").css('color', 'var(--blue)');
 });
 
 function loadPosts() {

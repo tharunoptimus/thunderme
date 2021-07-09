@@ -83,15 +83,17 @@ async function getPayload(username, userLoggedIn) {
     var user = await User.findOne({ username: username })
     
     if(user == null) {
+        if (username.match(/^[0-9a-fA-F]{24}$/)) {
+            user = await User.findById(username)
+            .catch(err => console.log(err))
+        }
+    }
 
-        user = await User.findById(username);
-
-        if(user == null) {
-            return {
-                pageTitle: "User not found",
-                userLoggedIn: userLoggedIn,
-                userLoggedInJs: JSON.stringify(userLoggedIn)
-            }
+    if(user == null) {
+        return {
+            pageTitle: "User not found",
+            userLoggedIn: userLoggedIn,
+            userLoggedInJs: JSON.stringify(userLoggedIn)
         }
     }
 

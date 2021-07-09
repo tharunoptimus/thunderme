@@ -33,6 +33,7 @@ $(document).ready(function () {
 
         // Remember to activate the loading spinner for all the pages availableC
     })
+    $(".fa-envelope").css('color', 'var(--blue)');
 
 });
 

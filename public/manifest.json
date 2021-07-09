@@ -1,0 +1,47 @@
+{
+	"short_name": "Connect Me",
+	"name": "Connect Me",
+	"description": "Connect me to the world",
+	"shortcuts": [
+		{
+			"name": "Search",
+			"short_name": "Search",
+			"description": "Search for users and posts",
+			"url": "/search",
+			"icons": [{ "src": "/images/search.png", "sizes": "512x512" }]
+		},
+		{
+			"name": "Notifications",
+			"short_name": "Notifications",
+			"description": "View the notifications",
+			"url": "/notifications",
+			"icons": [{ "src": "/images/notification.png", "sizes": "512x512" }]
+		},
+		{
+			"name": "Messages",
+			"short_name": "Messages",
+			"description": "Message your friends",
+			"url": "/messages",
+			"icons": [{ "src": "/images/message.png", "sizes": "512x512" }]
+		},
+		{
+			"name": "Profile",
+			"short_name": "Profile",
+			"description": "View or edit your profile",
+			"url": "/profile",
+			"icons": [{ "src": "/images/profile.png", "sizes": "512x512" }]
+		}
+	],
+	"icons": [
+		{
+			"src": "manifestLogo.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "any maskable"
+		}
+	],
+	"start_url": "/",
+	"background_color": "#1fa2f1",
+	"display": "standalone",
+	"theme_color": "#1fa2f1"
+}

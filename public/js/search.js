@@ -1,3 +1,7 @@
+$(document).ready(function () {
+    $(".fa-search").css('color', 'var(--blue)');
+}); 
+
 $("#searchBox").keydown(function (e) { 
     clearTimeout(timer);
     var textbox = $(e.target);
