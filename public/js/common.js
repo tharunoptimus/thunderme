@@ -18,6 +18,11 @@ $(document).ready(function () {
 		$("#navigatorBarMobile").remove();
 		isMobileView = false;
 	}
+	if(window.location.hostname !== 'localhost') {
+		if (location.protocol !== 'https:') {
+			location.replace(`https:${location.href.substring(location.protocol.length)}`);
+		}
+	}
 });
 
 $("#postTextarea, #replyTextarea").keyup(function (e) {
