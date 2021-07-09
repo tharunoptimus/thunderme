@@ -178,7 +178,7 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
                 <div class='messageContainer'>
                     ${nameElement}
                     <span class='messageBody'>
-                        ${message.content}
+                        ${replaceURLs(message.content)}
                     </span>
                 </div>
             </li>`;

@@ -333,7 +333,7 @@ $(document).on("click", ".post", (event) => {
 	var element = $(event.target);
 	var postId = getPostIdFromElement(element);
 
-	if(postId !== undefined && !element.is("button")) {
+	if(postId !== undefined && !element.is("button") && !element.is("a")) {
 		window.location.href = '/posts/' + postId;
 	}
 });
@@ -396,6 +396,25 @@ const getPostIdFromElement = (element) => {
 
 	return postId;
 };
+
+function replaceURLs(message) {
+	if (!message) return;
+
+	var urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+	return message.replace(urlRegex, function (url) {
+		var hyperlink = url;
+		if (!hyperlink.match("^https?://")) {
+			hyperlink = "http://" + hyperlink;
+		}
+		return (
+			'<a class=\'postLink\' href="' +
+			hyperlink +
+			'" target="_blank" rel="noopener noreferrer">' +
+			url +
+			" <i class='far fa-external-link-square-alt urlLink'></i> </a>"
+		);
+	});
+}
 
 const createPostHtml = (postData, largeFont = false) => {
 	if (postData == null) return alert("Post Object is Null!");
@@ -491,7 +510,7 @@ const createPostHtml = (postData, largeFont = false) => {
                         </div>
 						${replyFlag}
                         <div class='postBody'>
-                            <span>${postData.content}</span>
+							<span>${replaceURLs(postData.content)}</span>
                         </div>
                         <div class='postFooter'>
                             <div class='postButtonContainer'>
