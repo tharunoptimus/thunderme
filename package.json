@@ -1,7 +1,7 @@
 {
-  "name": "connectme",
+  "name": "thunderme",
   "version": "1.0.0",
-  "description": "Connect Me",
+  "description": "Thunder Me",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

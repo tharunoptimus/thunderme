@@ -352,8 +352,8 @@ $(document).on("click", ".shareButton", async (event) => {
 
 	if(postId !== undefined) {
 		var shareData = {
-			title: "Connect Me",
-			text: "Tweet on ConnectMe",
+			title: "Thunder Me",
+			text: "Tweet on ThunderMe",
 			url: window.location.origin + "/posts/" + postId,
 		};
 		try {

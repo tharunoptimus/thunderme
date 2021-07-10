@@ -11,7 +11,7 @@ const UserSchema = new Schema({
     personalEmail: { type: String, trim: true },
     phone: { type: String, trim: true },
     personalURL: { type: String, trim: true },
-    aboutField: { type: String, trim: true, default: "Hi There! Connect Me!" },
+    aboutField: { type: String, trim: true, default: "Hi There! Thunder Me!" },
     likes: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
     retweets: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
