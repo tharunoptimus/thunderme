@@ -148,4 +148,24 @@ router.post("/coverPhoto", upload.single("croppedImage"), async (req, res, next)
 
 })
 
+router.post("/uploadImage", upload.single("croppedImage"), async (req, res, next) => { 
+    if(!req.file){
+        console.log("No file uploaded with the ajax request.");
+        return res.sendStatus(400);
+    }
+
+    var filePath = `/uploads/images/${req.file.filename}.png`;
+    var tempPath = req.file.path;
+    var targetPath = path.join(__dirname, `../../${filePath}`);
+    fs.rename(tempPath, targetPath, async error => {
+        if(error != null){
+            console.log(error)
+            return res.sendStatus(400);
+        }
+        
+        res.status(206).send(filePath);
+    })
+
+})
+
 module.exports = router;

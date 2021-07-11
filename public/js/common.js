@@ -3,6 +3,7 @@ var cropper;
 var timer;
 var selectedUsers = [];
 var isMobileView;
+var uploadedImageLink;
 
 $(document).ready(function () {
 	refreshMessagesBadge();
@@ -24,6 +25,14 @@ $(document).ready(function () {
 		}
 	}
 });
+
+function toggleUploadButtons () {
+	$("#uploadImage").show();
+	$("#toBeUploaded").remove();
+	$("#cancelImage").hide();
+	uploadedImageLink = null;
+	return true;
+}
 
 $("#postTextarea, #replyTextarea").keyup(function (e) {
 	var textbox = $(e.target);
@@ -58,6 +67,8 @@ $("#submitPostButton, #submitReplyButton").click((event) => {
 		content: textbox.val(),
 	};
 
+	data.imagePath = isModal ? undefined : uploadedImageLink;
+
 	if (isModal) {
 		var id = button.data().id;
 		if (id == null) return alert("Button id is Null");
@@ -75,6 +86,7 @@ $("#submitPostButton, #submitReplyButton").click((event) => {
 			button.prop("disabled", true);
 		}
 	});
+	var isComplete = isModal ? null : toggleUploadButtons();
 });
 
 $("#replyModal").on("show.bs.modal", (event) => {
@@ -259,6 +271,30 @@ $("#coverPhoto").change(function() {
 	}
 })
 
+$(document).on("click", "#uploadImage", (event) => {
+	$('#createPostImageUploadModal').modal('show');
+})
+
+$("#filePostPhoto").change(function() {
+	
+	if(this.files && this.files[0]) {
+		var reader = new FileReader();
+		reader.onload = (e) => {
+			var image = document.getElementById("imagePreview");
+			image.src = e.target.result;
+
+			if(cropper !== undefined) {
+				cropper.destroy();
+			}
+
+			cropper = new Cropper(image, {
+				background: false
+			});
+
+		}
+		reader.readAsDataURL(this.files[0]);
+	}
+})
 
 $("#imageUploadButton").click(()=> {
 	var canvas = cropper.getCroppedCanvas();
@@ -302,6 +338,50 @@ $("#coverPhotoButton").click(()=> {
 			success: () => location.reload()
 		})
 	})
+})
+
+$("#postImageUploadButton").click(()=> {
+	var canvas = cropper.getCroppedCanvas();
+	var width = canvas.width;
+
+	if(canvas == null) {
+		return alert("Could not upload the image. Make sure it is an image file.");
+	}
+
+	let image = new Image();
+	image.src = canvas.toDataURL();
+	image.id = "toBeUploaded";
+
+	$(".postImageContainer").append(image);
+	canvas.toBlob((blob) => {
+		var formData = new FormData();
+		formData.append("croppedImage", blob);
+
+		$.ajax({
+			url: "/api/users/uploadImage",
+			type: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: (image, status, xhr) => {
+				if(xhr.status == 206) {
+					uploadedImageLink = image;
+				}
+				else {
+					alert("Unable to Upload the Image selected. Please try again!");
+					return;
+				}
+			}
+		})
+	})
+	$("#uploadImage").hide();
+	$("#cancelImage").show();
+	$('#createPostImageUploadModal').modal('toggle');
+	
+})
+
+$("#cancelImage").click(()=> {
+	var done = toggleUploadButtons();
 })
 
 $(document).on("click", ".likeButton", (event) => {
@@ -459,7 +539,17 @@ const createPostHtml = (postData, largeFont = false) => {
 	if (postData.content == null) {
 		postData.content =
 			"<div class='notAvailable'>This content is not available</div>";
-	} 
+	}
+
+	var image = "";
+
+	if(postData.imagePath != "" && postData.imagePath != null) {
+		image = `<div class='postImageHolder'>
+					<div class='realPostImageHolder'>
+						<a href="${postData.imagePath}"><img style='width: 100%' src="${postData.imagePath}" class="postImage" alt=${postData.content} /></a>
+					</div>
+				</div>`;
+	}
 
 	var isRetweet = postData.retweetData !== undefined;
 	var retweetedBy = isRetweet ? postData.postedBy.username : null;
@@ -555,6 +645,7 @@ const createPostHtml = (postData, largeFont = false) => {
 						${replyFlag}
                         <div class='postBody'>
 							<span>${replaceURLs(postData.content)}</span>
+							${image}
                         </div>
                         <div class='postFooter'>
                             <div class='postButtonContainer'>

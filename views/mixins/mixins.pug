@@ -4,8 +4,13 @@ mixin createPostForm(userLoggedIn)
             img(src=userLoggedIn.profilePic, alt="User's Profile Picture")
         .textareaContainer 
             textarea#postTextarea(placeholder="Whatcha got going on?")
-            .buttonsContainer 
+            .buttonsContainer(style="display: flex")
                 button#submitPostButton(disabled="" ) Post
+                button#uploadImage
+                    i(class="fal fa-image", style="font-size: 1.5rem; pointer-events: none;")
+                .postImageContainer
+                button#cancelImage
+                    i(class="fal fa-trash", style="font-size: 1.5rem; pointer-events: none; color: red;")
 
 mixin createReplyModal(userLoggedIn)
     #replyModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='replyModalLabel' aria-hidden='true')
@@ -45,6 +50,7 @@ mixin createPostModals(userLoggedIn)
     +createDeletePostModal()
     +createPinnedPostModal()
     +createUnPinPostModal()
+    +createPostImageUploadModal()
 
 mixin createFollowButton(user, isFollowing)
     - text = isFollowing ? "Following" : "Follow"
@@ -169,3 +175,20 @@ mixin editAboutField()
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                     button#changeAboutButton.btn.btn-primary(type='button', disabled="") Change
+
+mixin createPostImageUploadModal()
+    #createPostImageUploadModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='createPostImageUploadModalLabel' aria-hidden='true', style="padding-right: 0")
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#createPostImageUploadModalLabel.modal-title Crop Image
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') 
+                .modal-body
+                    input#filePostPhoto(type="file", name="filePostPhoto", accept="image/*")
+
+                    .imagePreviewContainer
+                        img#imagePreview
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+                    button#postImageUploadButton.btn.btn-primary(type='button') OK

@@ -481,7 +481,8 @@ nav a:hover {
 }
 
 #imagePreview,
-#coverPreview {
+#coverPreview,
+#imageUploadPreview {
 	width: 100%;
 	display: block;
 	max-width: 100%;
@@ -1027,6 +1028,45 @@ ul {
 	place-items: center;
 }
 
+.postImageContainer {
+	margin-left: 1rem;
+	height: 5vh;
+    width: 5vw;
+}
+
+#uploadImage {
+	margin-left: 1rem;
+    padding: 0.2rem;
+    outline: none;
+}
+
+#toBeUploaded {
+	width: 100%;
+	border: 1px solid var(--lightGrey);
+    padding: 2px;
+    border-radius: 5px;
+}
+
+.postImageHolder {
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+	max-height: 35vh;
+	margin: 1rem;
+}
+
+.realPostImageHolder {
+	width: 30vw;
+	overflow: hidden;
+    border: 1px solid #000;
+    border-radius: 0.7rem;
+	max-height: 100%;
+}
+
+#cancelImage {
+	display: none;
+}
+
 /* Media queries */
 /* iPad Portrait */
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait),
@@ -1122,5 +1162,21 @@ ul {
 	}
 	.fieldsContainer {
 		grid-template-columns: 1fr;
+	}
+	.postImageHolder {
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+		width: 60vw;
+		max-height: 35vh;
+		margin: 1rem;
+	}
+	
+	.realPostImageHolder {
+		width: 100%;
+		overflow: hidden;
+		border: 1px solid #000;
+		border-radius: 0.7rem;
+		max-height: 100%;
 	}
 }

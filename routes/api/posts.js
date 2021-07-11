@@ -76,10 +76,15 @@ router.post("/", async (req, res, next) => {
         return res.status(400);
     }
 
+    console.log(req.body);
+
     var postData = {
         content: req.body.content,
-        postedBy: req.session.user
+        postedBy: req.session.user,
+        imagePath: req.body.imagePath !== undefined ? req.body.imagePath : null
     }
+
+    console.log(postData);
 
     if(req.body.replyTo) {
         postData.replyTo = req.body.replyTo;
