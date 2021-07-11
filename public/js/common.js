@@ -4,6 +4,8 @@ var timer;
 var selectedUsers = [];
 var isMobileView;
 var uploadedImageLink;
+if(inChatPage === undefined) { var inChatPage = false; }
+if(inNewChatPage === undefined) { var inNewChatPage = false; }
 
 $(document).ready(function () {
 	refreshMessagesBadge();
@@ -14,6 +16,13 @@ $(document).ready(function () {
 	if(screen.width < 420) {
 		$("#navigatorBarDesktop").remove();
 		isMobileView = true;
+		$(".row").css("flex-direction", "column");
+		if(inChatPage) {
+			$(".mainSectionContainer").css("position", "relative");
+		}
+		if(inNewChatPage) {
+			$(".mainSectionContainer").css("position", "relative");
+		}
 	}
 	else {
 		$("#navigatorBarMobile").remove();
@@ -1030,11 +1039,11 @@ $( window ).resize(function() {
 	if(isMobileView) {
 		if(isNavigatorMobileHidden) {
 			$("#navigatorBarMobile").show();
-			$(".chatContainer").css("height","76vh");
+			if(inChatPage) {$(".mainSectionContainer").css("max-height", "93%");}
 		}
 		else {
 			$("#navigatorBarMobile").hide();
-			$(".chatContainer").css("height","83vh");
+			if(inChatPage) {$(".mainSectionContainer").css("max-height", "100%");}
 		}
 	}
 

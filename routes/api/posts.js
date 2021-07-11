@@ -76,8 +76,6 @@ router.post("/", async (req, res, next) => {
         return res.status(400);
     }
 
-    console.log(req.body);
-
     var postData = {
         content: req.body.content,
         postedBy: req.session.user,

@@ -7,4 +7,9 @@ block content
             #selectedUsers
                 input#userSearchTextbox(type="text", name="userSearchTextbox", placeholder="Type the name of the user")
         .resultsContainer
-        button#createChatButton(disabled="") Create Chat
+        
+block headerButton
+    button#createChatButton(disabled="") Create Chat
+
+block scripts 
+    script(src="/js/newChat.js")

@@ -1,6 +1,7 @@
 var typing = false;
 var lastTypingTime;
 var users;
+var inChatPage = true;
 
 $(document).ready(function () {
 
