@@ -305,6 +305,27 @@ $("#filePostPhoto").change(function() {
 	}
 })
 
+$("#sendImageInput").change(function() {
+
+	if(this.files && this.files[0]) {
+		var reader = new FileReader();
+		reader.onload = (e) => {
+			var image = document.getElementById("imagePreview");
+			image.src = e.target.result;
+
+			if(cropper !== undefined) {
+				cropper.destroy();
+			}
+
+			cropper = new Cropper(image, {
+				background: false
+			});
+
+		}
+		reader.readAsDataURL(this.files[0]);
+	}
+})
+
 $("#imageUploadButton").click(()=> {
 	var canvas = cropper.getCroppedCanvas();
 
@@ -391,6 +412,20 @@ $("#postImageUploadButton").click(()=> {
 
 $("#cancelImage").click(()=> {
 	var done = toggleUploadButtons();
+})
+
+$("#confirmSendImageButton").click(()=> {
+	var canvas = cropper.getCroppedCanvas();
+
+	if(canvas == null) {
+		return alert("Could not upload the image. Make sure it is an image file.");
+	}
+
+	canvas.toBlob((blob) => {
+		var formData = new FormData();
+		formData.append("croppedImage", blob);
+		uploadCroppedImage(formData);
+	})
 })
 
 $(document).on("click", ".likeButton", (event) => {

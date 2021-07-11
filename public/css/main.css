@@ -482,6 +482,7 @@ nav a:hover {
 
 #imagePreview,
 #coverPreview,
+#imageView,
 #imageUploadPreview {
 	width: 100%;
 	display: block;
@@ -1065,6 +1066,21 @@ ul {
 
 #cancelImage {
 	display: none;
+}
+
+.sentImageContainer {
+	display: grid;
+	grid-template-columns: 20fr 1fr;
+	overflow: hidden;
+	max-height: 20vh;
+    max-width: 20vh;
+}
+
+.sentImageContainer .sentPngImage{
+	height: 100%;
+	width: 100%;
+	border-radius: 0.5rem;
+	flex: 1;
 }
 
 /* Media queries */

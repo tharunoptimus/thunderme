@@ -44,6 +44,22 @@ router.post("/", async (req, res, next) => {
     
 })
 
+router.put("/delete/:messageId", async (req, res, next) => {
+    var messageId = req.params.messageId;
+
+    var messageToDelete = await Message.findById(messageId)
+
+    if(messageToDelete.sender._id != req.session.user._id) {
+        return res.sendStatus(401);
+    }
+    else {
+        await Message.findByIdAndRemove(messageId)
+        .then( async message => { res.sendStatus(204); })
+        .catch(error => console.log(error))
+    }
+    
+})
+
 function insertNotifications(chat, message) {
     chat.users.forEach(userId => {
         if(userId == message.sender._id.toString()) return;

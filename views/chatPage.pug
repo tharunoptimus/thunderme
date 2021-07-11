@@ -25,10 +25,15 @@ block content
                     .footer
                         button.sendVideoCallRequestButton
                             i.fal.fa-video
+                        button.sendImageButton(data-toggle="modal", data-target="#sendImageModal")
+                            i.fal.fa-camera-alt
                         textarea.inputTextbox(name="messageInput", placeholder="Type a message...")
                         button.sendMessageButton
                             i.fal.fa-paper-plane
         +createChatNameModal(chat)
+        +sendImageModal()
+        +viewSentImageModal()
+        +deleteSentMessageModal()
 
 block scripts 
     script(src="/js/chatPage.js")

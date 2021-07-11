@@ -192,3 +192,46 @@ mixin createPostImageUploadModal()
                 .modal-footer
                     button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
                     button#postImageUploadButton.btn.btn-primary(type='button') OK
+
+mixin sendImageModal()
+    #sendImageModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='sendImageModalLabel' aria-hidden='true', style="padding-right: 0")
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#sendImageModalLabel.modal-title Crop Image
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') 
+                .modal-body
+                    input#sendImageInput(type="file", name="sendImageInput", accept="image/*")
+
+                    .imagePreviewContainer
+                        img#imagePreview
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+                    button#confirmSendImageButton.btn.btn-primary(type='button') Send
+
+mixin viewSentImageModal()
+    #viewSentImageModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='viewSentImageModalLabel' aria-hidden='true', style="padding-right: 0")
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    h5#viewSentImageModalLabel.modal-title View Image
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') 
+                .modal-body
+                        img#imageView
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+
+mixin deleteSentMessageModal()
+    #deleteSentMessageModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteSentMessageModalLabel' aria-hidden='true', style="padding-right: 0")
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    h5#deleteSentMessageModalLabel.modal-title Delete Message?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    span(aria-hidden='true') 
+                .modal-body
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#confirmDeleteButton.btn.btn-primary(type='button') Delete

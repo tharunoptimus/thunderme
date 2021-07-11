@@ -2,12 +2,21 @@ var typing = false;
 var lastTypingTime;
 var users;
 var inChatPage = true;
+var uploadedImageLink = "";
+var idToDelete = "";
+
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/~/g, '&tilde;');
+}
 
 $(document).ready(function () {
 
     socket.emit("join room", chatId);
     socket.on("typing", () => $(".typingDots").show());
     socket.on("stop typing", () => $(".typingDots").hide());
+    socket.on("message deleted", (toDeleteId) => {
+        $("li[data-id=" + toDeleteId + "]").remove();
+    });
 
     $.get(`/api/chats/${chatId}`, (data) => {
         $("#chatName").text(getChatName(data));
@@ -230,14 +239,18 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
                             </div>`
     }
 
+
     var requiredContent = replaceURLs(message.content);
 
     if((message.content).substring(0,33) == '<i class="fal fa-video-plus"></i>') {
         var link = (message.content).substring(34, (message.content).length);
         requiredContent = createJitsiMeetPostHtml(link);
     }
+    if(isOfficialLink(message.content) != false) {
+        requiredContent = isOfficialLink(message.content);
+    }
 
-    return `<li class='message ${liClassName}'>
+    return `<li data-id=${message._id} class='message ${liClassName}'>
                 ${imageContainer}
                 <div class='messageContainer'>
                     ${nameElement}
@@ -318,3 +331,82 @@ function makeid(length) {
    }
    return result;
 }
+
+function isOfficialLink(content) {
+    let start = "/uploads/images/";
+    let end = ".png";
+    if (content.substring(0, 16) == start && content.substring(content.length - 4) == end) {
+        return `<div class='sentImageContainer'>
+                <img class='sentPngImage' src='${content}' alt='uploaded image'>
+                <span></span><span></span>
+                <a href='${content}' target='_blank' download='image.png'><button><i class="fal fa-download"></i></button></a>
+            </div>`
+    }
+    return false;
+}
+
+function uploadCroppedImage (formData) {
+
+    $.ajax({
+        url: "/api/users/uploadImage",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: (data, status, xhr) => {
+            if(xhr.status == 206) {
+                sendImage(data)
+            }
+            else {
+                alert("Unable to send image. Please try again!")
+            }
+        }
+    })
+}
+
+function sendImage(imageURL) {
+    
+    $.post("/api/messages", { content: imageURL, chatId: chatId }, (data, status, xhr) => {
+        if(xhr.status != 201) {
+            alert("Could not send your image. Check your internet connection.");
+            return;
+        }
+        addChatMessageHtml(data);
+        $("#sendImageModal").modal("hide");
+
+        if(connected) {
+            socket.emit("new message", data);
+        }
+    })
+}
+
+$(document).on("click", ".sentPngImage", (event) => {
+    var imageURL = $(event.target).attr("src");
+    $("#viewSentImageModal").modal("show");
+    $("#imageView").attr("src", imageURL);
+});
+
+// console.log when the li is double clicked
+$(document).on("dblclick", ".message", function(event) {
+    idToDelete = $(this).data("id");
+    $("#deleteSentMessageModal").modal("show");
+    var html = $(this).find('span.messageBody').html();
+    $("#deleteSentMessageModal .modal-body").html("");
+    $("#deleteSentMessageModal .modal-body").append(html);
+})
+
+// on deletebutton click
+$(document).on("click", "#confirmDeleteButton", function(event) {
+    $.ajax({
+        url: "/api/messages/delete/" + idToDelete,
+        type: "PUT",
+        success: (data, status, xhr) => {
+            if(xhr.status == 204) {
+                $("li[data-id=" + idToDelete + "]").remove();
+                $("#deleteSentMessageModal").modal("hide");
+                socket.emit("message deleted", chatId, idToDelete);
+            }
+        },
+        error: (xhr, status, error) => { alert("Could not delete Message! Make sure it is your message!");}
+    })
+})
