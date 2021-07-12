@@ -3,7 +3,7 @@ var lastTypingTime;
 var users;
 var inChatPage = true;
 var uploadedImageLink = "";
-var idToDelete = "";
+var selectedChatId = "";
 
 function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/~/g, '&tilde;');
@@ -17,6 +17,7 @@ $(document).ready(function () {
     socket.on("message deleted", (toDeleteId) => {
         $("li[data-id=" + toDeleteId + "]").remove();
     });
+    $("#replyActiveButton").hide();
 
     $.get(`/api/chats/${chatId}`, (data) => {
         $("#chatName").text(getChatName(data));
@@ -101,13 +102,37 @@ $(".sendVideoCallRequestButton").click(() => {
 $(".inputTextbox").keydown((event) => {
 
     updateTyping();
+    var textbox = $(event.target);
+    var value = textbox.val();
 
     if(event.which === 13 && !event.shiftKey) {
         messageSubmitted();
         return false;
     }
+    
+    if(event.which === 8 && value == "") {
+        userPressedEscapeKey();
+    }
 
 })
+
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    var isEscape = false;
+    if ("key" in evt) {
+        isEscape = (evt.key === "Escape" || evt.key === "Esc");
+    } else {
+        isEscape = (evt.keyCode === 27);
+    }
+    if (isEscape) {
+        userPressedEscapeKey();
+    }
+};
+
+function userPressedEscapeKey () {
+    readyToSend();
+    $(".inputTextBox").attr("placeholder", "Type a message...");
+}
 
 function updateTyping() {
     if(!connected) return;
@@ -134,9 +159,15 @@ function updateTyping() {
 function messageSubmitted() {
     var content = $(".inputTextbox").val().trim();
 
+    if(selectedChatId != "") {
+        var appendingString = "~id~";
+        content = content + appendingString + selectedChatId;
+    }
+
 
     if(content != "") {
         sendMessage(content);
+        if(selectedChatId != "") {userPressedEscapeKey ();}
         $(".inputTextbox").val("");
         socket.emit("stop typing", chatId);
         typing = false;
@@ -157,6 +188,7 @@ function videoCallRequestSent() {
 }
 
 function sendMessage(content) {
+
     $.post("/api/messages", { content: content, chatId: chatId }, (data, status, xhr) => {
         if(xhr.status != 201) {
             alert("Could not send your message. Check your internet connection.");
@@ -194,7 +226,8 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
     var senderName = sender.firstName + " " + sender.lastName;
 
     var timestamp = timeDifference(new Date(), new Date(message.createdAt));
-    var toShowInfo = "";
+    var toShowInfo = false;
+    var appendedString = "~id~";
 
     var currentSenderId = sender._id;
     var nextSenderId = nextMessage != null ? nextMessage.sender._id : "";
@@ -239,6 +272,14 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
                             </div>`
     }
 
+    if(message.content.includes(appendedString)){
+        var starting = message.content.indexOf(appendedString) + 4;
+        var repliedId = message.content.substring(starting, message.content.length);
+        message.content = message.content.substring(0, starting - 4);
+        toShowInfo = true;
+        var buttonElement = `<button class='showToRepliedChat' style='outline: none;' data-id='${repliedId}'><i class="fal fa-comment-dots"></i></button>`;
+    }
+
 
     var requiredContent = replaceURLs(message.content);
 
@@ -249,6 +290,11 @@ function createMessageHtml(message, nextMessage, lastSenderId) {
     if(isOfficialLink(message.content) != false) {
         requiredContent = isOfficialLink(message.content);
     }
+
+    if(toShowInfo) {
+        requiredContent = `${requiredContent + buttonElement}`
+    }
+    
 
     return `<li data-id=${message._id} class='message ${liClassName}'>
                 ${imageContainer}
@@ -386,27 +432,85 @@ $(document).on("click", ".sentPngImage", (event) => {
     $("#imageView").attr("src", imageURL);
 });
 
-// console.log when the li is double clicked
+
+
 $(document).on("dblclick", ".message", function(event) {
-    idToDelete = $(this).data("id");
-    $("#deleteSentMessageModal").modal("show");
+    selectedChatId = $(this).data("id");
     var html = $(this).find('span.messageBody').html();
     $("#deleteSentMessageModal .modal-body").html("");
     $("#deleteSentMessageModal .modal-body").append(html);
+    $("#deleteSentMessageModal").modal("show");
 })
 
-// on deletebutton click
+function readyToReply() {
+    $("#sendChatButton").removeClass("fa-paper-plane");
+    $("#sendChatButton").addClass("fa-reply");
+    $(".inputTextBox").attr("placeholder", "Type the reply...");
+    var messageLiElement = $("li[data-id=" + selectedChatId + "]");
+    var messageBodyElement = messageLiElement.find(".messageBody");
+    messageBodyElement.addClass("selectedChatToReply");
+
+}
+
+function readyToSend() {
+    $("#sendChatButton").removeClass("fa-reply");
+    $("#sendChatButton").addClass("fa-paper-plane");
+    var messageLiElement = $("li[data-id=" + selectedChatId + "]");
+    var messageBodyElement = messageLiElement.find(".messageBody");
+    messageBodyElement.removeClass("selectedChatToReply");
+    selectedChatId = "";
+}
+
+$(document).on("click", "#confirmReplyButton", (event) => { 
+    $("#deleteSentMessageModal").modal("hide");
+    readyToReply();
+})
+
+$(document).on("click", "#replyActiveButton", function(event) {
+    var container = $(".chatMessages");
+    var messageLiElement = $("li[data-id=" + selectedChatId + "]");
+    
+    var heightToScroll = container.scrollTop() + messageLiElement.position().top
+    - container.height()/2 + messageLiElement.height()/2;
+    container.animate({ scrollTop: heightToScroll }, "slow");
+})
+
+$(document).on("click", ".showToRepliedChat", (event) => {
+    var messageId = $(event.target).data("id");
+    var messageLiElement = $("li[data-id=" + messageId + "]");
+
+    var container = $(".chatMessages");
+
+    var heightToScroll = container.scrollTop() + messageLiElement.position().top
+    - container.height()/2 + messageLiElement.height()/2;
+    container.animate({ scrollTop: heightToScroll }, "slow");
+
+    var messageBodyElement = messageLiElement.find(".messageBody");
+
+    // Transitions
+    messageBodyElement.addClass("selectedChatToReply");
+    messageLiElement.addClass("selectedChatToReplyLiElement");
+    setTimeout(() => {
+        messageBodyElement.removeClass("selectedChatToReply");
+        messageLiElement.removeClass("selectedChatToReplyLiElement");
+    }, 1000)
+    
+})
+
+
+
 $(document).on("click", "#confirmDeleteButton", function(event) {
     $.ajax({
-        url: "/api/messages/delete/" + idToDelete,
+        url: "/api/messages/delete/" + selectedChatId,
         type: "PUT",
         success: (data, status, xhr) => {
             if(xhr.status == 204) {
-                $("li[data-id=" + idToDelete + "]").remove();
+                $("li[data-id=" + selectedChatId + "]").remove();
                 $("#deleteSentMessageModal").modal("hide");
-                socket.emit("message deleted", chatId, idToDelete);
+                socket.emit("message deleted", chatId, selectedChatId);
+                selectedChatId = "";
             }
         },
-        error: (xhr, status, error) => { alert("Could not delete Message! Make sure it is your message!");}
+        error: () => { alert("Could not delete Message! Make sure it is your message!"); }
     })
 })

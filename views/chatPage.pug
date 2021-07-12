@@ -26,10 +26,10 @@ block content
                         button.sendVideoCallRequestButton
                             i.fal.fa-video
                         button.sendImageButton(data-toggle="modal", data-target="#sendImageModal")
-                            i.fal.fa-camera-alt
+                            i.fal.fa-camera-alt                     
                         textarea.inputTextbox(name="messageInput", placeholder="Type a message...")
                         button.sendMessageButton
-                            i.fal.fa-paper-plane
+                            i#sendChatButton.fal.fa-paper-plane
         +createChatNameModal(chat)
         +sendImageModal()
         +viewSentImageModal()

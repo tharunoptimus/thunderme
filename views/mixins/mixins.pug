@@ -228,10 +228,11 @@ mixin deleteSentMessageModal()
         .modal-dialog.modal-dialog-centered(role='document')
             .modal-content
                 .modal-header
-                    h5#deleteSentMessageModalLabel.modal-title Delete Message?
+                    h5#deleteSentMessageModalLabel.modal-title Actions
                     button.close(type='button' data-dismiss='modal' aria-label='Close')
                     span(aria-hidden='true') 
                 .modal-body
                 .modal-footer
-                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-                    button#confirmDeleteButton.btn.btn-primary(type='button') Delete
+                    button#confirmReplyButton.btn.btn-primary(type='button', style="margin: 1rem;") Reply
+                    button#confirmDeleteButton.btn.btn-primary(type='button', style="margin: 1rem;") Delete
+                    button.btn.btn-secondary(type='button' data-dismiss='modal', style="margin: 1rem;") Close

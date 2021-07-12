@@ -1083,6 +1083,17 @@ ul {
 	flex: 1;
 }
 
+.selectedChatToReply {
+	box-shadow: 0 0 0 3px #f0932b;
+}
+
+.selectedChatToReplyLiElement {
+	background-color: rgb(240 147 43 / 10%);
+    border-radius: 1rem;
+}
+
+
+
 /* Media queries */
 /* iPad Portrait */
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait),
