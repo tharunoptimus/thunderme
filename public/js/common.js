@@ -393,9 +393,9 @@ $("#postImageUploadButton").click(()=> {
 			data: formData,
 			processData: false,
 			contentType: false,
-			success: (image, status, xhr) => {
+			success: (uploadedImageURL, status, xhr) => {
 				if(xhr.status == 206) {
-					uploadedImageLink = image;
+					uploadedImageLink = uploadedImageURL;
 				}
 				else {
 					alert("Unable to Upload the Image selected. Please try again!");
@@ -407,6 +407,7 @@ $("#postImageUploadButton").click(()=> {
 	$("#uploadImage").hide();
 	$("#cancelImage").show();
 	$('#createPostImageUploadModal').modal('toggle');
+	alert("Please wait for 15-20 secs before posting a new tweet!")
 	
 })
 

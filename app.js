@@ -90,11 +90,6 @@ io.on("connection", (socket) => {
             var firstObject = (newMessage.content).indexOf('">') + 2;
             newMessage.content = (newMessage.content).substring(firstObject, lastObject);
         }
-        let start = "/uploads/images/";
-        let end = ".png";
-        if (newMessage.content.substring(0, 16) == start && newMessage.content.substring(newMessage.content.length - 4) == end) {
-            newMessage.content = `<i class="fad fa-image"></i> Image`
-        }
 
         chat.users.forEach(user => {
             if(user._id == newMessage.sender._id) return;
