@@ -1,8 +1,12 @@
 const mongoose = require("mongoose")
+require('dotenv').config()
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
+
+const MONGO_URI = process.env.MONGO_URI;
+
 class Database {
 
     constructor() {
@@ -10,7 +14,7 @@ class Database {
     }
 
     connect() {
-        mongoose.connect("mongodb+srv://username:password@connect.ryqlc.mongodb.net/databaseName?retryWrites=true&w=majority")
+        mongoose.connect(MONGO_URI)
         .then(() => {
             console.log("Database Connection Successful!");
         })
