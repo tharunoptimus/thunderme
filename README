@@ -1,0 +1,8 @@
+Make sure you have these variables defined in your environment variables or .env file
+
+```bash
+MONGO_URI
+IMAGE_KIT_PUBLIC_KEY
+IMAGE_KIT_PRIVATE_KEY
+IMAGE_KIT_URL_ENDPOINT
+```
