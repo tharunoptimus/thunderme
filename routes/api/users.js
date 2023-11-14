@@ -4,7 +4,9 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const upload = multer({ dest: "uploads/"});
+const upload = multer({ storage: multer.memoryStorage()})
+const ImageKit = require("imagekit")
+const { v4: uuidv4 } = require('uuid')
 const User = require("../../schemas/UserSchema");
 const Post = require("../../schemas/PostSchema");
 const Notification = require("../../schemas/NotificationSchema");
@@ -110,62 +112,79 @@ router.get("/:userId/followers", async (req, res, next) => {
 })
 
 router.post("/profilePicture", upload.single("croppedImage"), async (req, res, next) => { 
-    if(!req.file){
-        console.log("No file uploaded with the ajax request.");
-        return res.sendStatus(400);
+    let image = req.file
+
+    if(!image) {
+        console.log("No file uploaded with the ajax request.")
+        res.status(400).send({ message: "No file uploaded with the ajax request." })
+        return
     }
 
-    var filePath = `/uploads/images/${req.file.filename}.png`;
-    var tempPath = req.file.path;
-    var targetPath = path.join(__dirname, `../../${filePath}`);
-    fs.rename(tempPath, targetPath, async error => {
-        if(error != null){
-            console.log(error)
-            return res.sendStatus(400);
-        }
-        req.session.user = await User.findByIdAndUpdate(req.session.user._id, { profilePic: filePath }, { new: true })
-        res.sendStatus(204);
+    let uploadedImage = await uploadImage(image).catch((err) => {
+        console.log(err)
+        return res.status(400).send({ message: "Error Uploading Image" })
     })
+    
+    req.session.user = await User.findByIdAndUpdate(req.session.user._id, { profilePic: uploadedImage.url }, { new: true })
+    return res.sendStatus(204)
 
 })
+
 router.post("/coverPhoto", upload.single("croppedImage"), async (req, res, next) => { 
-    if(!req.file){
-        console.log("No file uploaded with the ajax request.");
-        return res.sendStatus(400);
+    
+    let image = req.file
+
+    if(!image) {
+        console.log("No file uploaded with the ajax request.")
+        res.status(400).send({ message: "No file uploaded with the ajax request." })
+        return
     }
 
-    var filePath = `/uploads/images/${req.file.filename}.png`;
-    var tempPath = req.file.path;
-    var targetPath = path.join(__dirname, `../../${filePath}`);
-    fs.rename(tempPath, targetPath, async error => {
-        if(error != null){
-            console.log(error)
-            return res.sendStatus(400);
-        }
-        req.session.user = await User.findByIdAndUpdate(req.session.user._id, { coverPhoto: filePath }, { new: true })
-        res.sendStatus(204);
+    let uploadedImage = await uploadImage(image).catch((err) => {
+        console.log(err)
+        return res.status(400).send({ message: "Error Uploading Image" })
     })
+
+    req.session.user = await User.findByIdAndUpdate(req.session.user._id, { coverPhoto: uploadedImage.url }, { new: true })
+    res.sendStatus(204)
 
 })
 
 router.post("/uploadImage", upload.single("croppedImage"), async (req, res, next) => { 
-    if(!req.file){
-        console.log("No file uploaded with the ajax request.");
-        return res.sendStatus(400);
+    let image = req.file
+
+    if(!image) {
+        console.log("No file uploaded with the ajax request.")
+        res.status(400).send({ message: "No file uploaded with the ajax request." })
+        return
     }
 
-    var filePath = `/uploads/images/${req.file.filename}.png`;
-    var tempPath = req.file.path;
-    var targetPath = path.join(__dirname, `../../${filePath}`);
-    fs.rename(tempPath, targetPath, async error => {
-        if(error != null){
-            console.log(error)
-            return res.sendStatus(400);
-        }
-        
-        res.status(206).send(filePath);
+    let uploadedImage = await uploadImage(image).catch((err) => {
+        console.log(err)
+        return res.status(400).send({ message: "Error Uploading Image" })
     })
+        
+    res.status(201).send(uploadedImage.url);
 
 })
+
+async function uploadImage(image, uuid = uuidv4()) {
+    const imageKit = new ImageKit({
+        publicKey : process.env.IMAGE_KIT_PUBLIC_KEY,
+        privateKey : process.env.IMAGE_KIT_PRIVATE_KEY,
+        urlEndpoint : process.env.IMAGE_KIT_URL_ENDPOINT
+    })
+
+    const response = await imageKit.upload({
+        file : image.buffer,
+        fileName : `${image.originalname}-${uuid}}`
+    }).catch(err => {
+        console.log(err)
+        return null
+    })
+
+    return response
+}
+
 
 module.exports = router;

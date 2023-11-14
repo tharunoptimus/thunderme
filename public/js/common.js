@@ -394,7 +394,7 @@ $("#postImageUploadButton").click(()=> {
 			processData: false,
 			contentType: false,
 			success: (uploadedImageURL, status, xhr) => {
-				if(xhr.status == 206) {
+				if(xhr.status == 201) {
 					uploadedImageLink = uploadedImageURL;
 				}
 				else {
